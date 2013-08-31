@@ -70,4 +70,10 @@ class ExerciseTest extends FlatSpec with BeforeAndAfter with GivenWhenThen with 
     opt.filter(_ % 2 == 1) should be (None)
   }
 
+  "variance" should "calculate variance" in {
+
+    Exercise2.variance(List(1,1,1)) should be (Some(0.toDouble))
+    Exercise2.variance(List(1,2,1,2)) should be (Some(0.25.toDouble))
+    Exercise2.variance(List(1,1,2,4)) should be (Some(1.5.toDouble))
+  }
 }
