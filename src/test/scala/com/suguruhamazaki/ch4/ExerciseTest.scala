@@ -76,4 +76,35 @@ class ExerciseTest extends FlatSpec with BeforeAndAfter with GivenWhenThen with 
     Exercise2.variance(List(1,2,1,2)) should be (Some(0.25.toDouble))
     Exercise2.variance(List(1,1,2,4)) should be (Some(1.5.toDouble))
   }
+
+  "map2" should "return an Option of C" in {
+
+    Exercise3.map2(Some(1), Some(2)) {
+      (a: Int, b: Int) ⇒ a + b
+    } should be (Some(3))
+
+    Exercise3.map2(Some(1), None) {
+      (a: Int, b: Int) ⇒ a + b
+    } should be (None)
+
+    Exercise3.map2(None, Some(2)) {
+      (a: Int, b: Int) ⇒ a + b
+    } should be (None)
+  }
+
+  "bothMatch" should "return an Option of Boolean" in {
+
+    Exercise4.bothMatch_2("a+", "[a-z]+", "a") should be (Some(true))
+    Exercise4.bothMatch_2("a+", "[a-z]+", "b") should be (Some(false))
+    Exercise4.bothMatch_2("a+", "[a-z", "a") should be (None)
+    Exercise4.bothMatch_2("a\\", "[a-z]", "a") should be (None)
+  }
+
+  "sequence" should "return an Option of List of A" in {
+
+    Exercise5.sequence(List(Some(1), Some(2), Some(3))) should be (Some(List(1, 2, 3)))
+    Exercise5.sequence(List(None, Some(2), Some(3))) should be (None)
+    Exercise5.sequence(List(Some(1), None, Some(3))) should be (None)
+    Exercise5.sequence(List(Some(1), Some(2), None)) should be (None)
+  }
 }

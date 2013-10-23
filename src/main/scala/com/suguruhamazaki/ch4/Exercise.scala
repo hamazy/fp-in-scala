@@ -58,3 +58,38 @@ object Exercise2 {
     }
 
 }
+
+object Exercise3 {
+  def map2[A,B,C](a: Option[A], b: Option[B])(f: (A, B) ⇒ C): Option[C] = for {
+    x ← a
+    y ← b
+  } yield f(x, y)
+}
+
+object Exercise4 {
+  import java.util.regex.{Pattern, PatternSyntaxException}
+  def pattern(s: String): Option[Pattern] =
+    try {
+      Some(Pattern.compile(s))
+    } catch {
+      case e: PatternSyntaxException ⇒ None
+    }
+  def mkMatcher(pat: String): Option[String ⇒ Boolean] =
+    pattern(pat) map ( p ⇒ (s: String) ⇒ p.matcher(s).matches)
+  def bothMatch_2(pat1: String, pat2: String, s: String): Option[Boolean] =
+    Exercise3.map2(mkMatcher(pat1), mkMatcher(pat2)) { (f, g) ⇒ f(s) && g(s) }
+}
+
+object Exercise5 {
+  def sequence[A](a: List[Option[A]]): Option[List[A]] =
+    a match {
+      case x :: Nil ⇒ x.map( _::Nil)
+      case x :: xs ⇒ {
+        x flatMap { xx ⇒
+          sequence(xs) map { xxs ⇒
+            xx::xxs
+          }
+        }
+      }
+    }
+}
