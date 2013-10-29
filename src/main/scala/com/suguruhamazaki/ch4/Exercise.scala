@@ -83,13 +83,74 @@ object Exercise4 {
 object Exercise5 {
   def sequence[A](a: List[Option[A]]): Option[List[A]] =
     a match {
-      case x :: Nil ⇒ x.map( _::Nil)
-      case x :: xs ⇒ {
-        x flatMap { xx ⇒
-          sequence(xs) map { xxs ⇒
-            xx::xxs
+      case elem :: Nil ⇒ elem.map( _::Nil)
+      case head :: rest ⇒ {
+        head flatMap { elem ⇒
+          sequence(rest) map { list ⇒
+            elem::list
           }
         }
+      }
+    }
+}
+
+object Exercise6 {
+  def traverse[A,B](a: List[A])(f: A ⇒ Option[B]): Option[List[B]] =
+    a match {
+      case x :: Nil ⇒ f(x).map(_::Nil)
+      case x :: xs ⇒ f(x).flatMap { elem ⇒
+        traverse(xs)(f) map { list ⇒
+          elem::list
+        }
+      }
+    }
+}
+
+object Exercise7 {
+  sealed trait Either[+E,+A] {
+    def map[B](f: A ⇒ B): Either[E, B]
+    def flatMap[EE >: E, B](f: A ⇒ Either[EE, B]): Either[EE, B]
+    def orElse[EE >: E, B >: A](b: ⇒ Either[EE, B]): Either[EE, B]
+    def map2[EE >: E, B, C](b: Either[EE, B])(f: (A, B) ⇒ C): Either[EE, C]
+  }
+  case class Left[+E](value: E) extends Either[E, Nothing] {
+    def map[B](f: Nothing ⇒ B): Either[E, Nothing] = this
+    def flatMap[EE >: E, B](f: Nothing ⇒ Either[EE, B]): Either[EE, B] = this
+    def orElse[EE >: E, B >: Nothing](b: ⇒ Either[EE, B]): Either[EE, B] = b
+    def map2[EE >: E, B, C](b: Either[EE, B])(f: (Nothing, B) ⇒ C): Either[EE, C] = this
+  }
+  case class Right[+A](value: A) extends Either[Nothing, A] {
+    def map[B](f: A ⇒ B): Either[Nothing, B] = Right(f(value))
+    def flatMap[Nothing, B](f: A ⇒ Either[Nothing, B]): Either[Nothing, B] = f(value)
+    def orElse[Nothing, B >: A](b: ⇒ Either[Nothing, B]): Either[Nothing, B] = this
+    def map2[Nothing, B, C](b: Either[Nothing, B])(f: (A, B) ⇒ C): Either[Nothing, C] =
+      b.map { bb ⇒ f(value, bb) }
+  }
+}
+
+object Exercise8 {
+  import Exercise7.{Either, Left, Right}
+  def sequence[E, A](a: List[Either[E,A]]): Either[E, List[A]] =
+    a match {
+      case elem :: Nil ⇒ elem.map { _ :: Nil }
+      case head :: rest ⇒ {
+        head flatMap { elem ⇒
+          sequence(rest) map { list ⇒
+            elem::list
+          }
+        }
+      }
+    }
+  def traverse[E,A,B](a: List[Either[E,A]])(f: A ⇒ Either[E,B]): Either[E, List[B]] =
+    a match {
+      case elem :: Nil ⇒ elem flatMap { v ⇒
+        f(v).map(List(_))
+      }
+      case head :: rest ⇒
+        head flatMap { elem ⇒
+          traverse(rest)(f) flatMap { list ⇒
+            f(elem) map { _::list }
+          }
       }
     }
 }
