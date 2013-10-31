@@ -1,9 +1,9 @@
 package com.suguruhamazaki.ch4
 
 import org.scalatest.{BeforeAndAfter, FlatSpec, GivenWhenThen}
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 
-class ExerciseTest extends FlatSpec with BeforeAndAfter with GivenWhenThen with ShouldMatchers {
+class ExerciseTest extends FlatSpec with BeforeAndAfter with GivenWhenThen with Matchers {
 
   "Some" should "be mapped to Some" in {
 
@@ -20,15 +20,15 @@ class ExerciseTest extends FlatSpec with BeforeAndAfter with GivenWhenThen with 
 
   "Some" should "be flatMap-ped" in {
 
-    Some(1).flatMap(n => Some(n + 1)) should be (Some(2))
-    Some(1).flatMap(n => None) should be (None)
+    Some(1).flatMap(n ⇒ Some(n + 1)) should be (Some(2))
+    Some(1).flatMap(n ⇒ None) should be (None)
   }
 
   "None" should "be flatMap-ped" in {
 
     val opt:Option[Int] = None
-    opt.flatMap(n => Some(n + 1)) should be (None)
-    opt.flatMap(n => None) should be (None)
+    opt.flatMap(n ⇒ Some(n + 1)) should be (None)
+    opt.flatMap(n ⇒ None) should be (None)
   }
 
   "getOrElse applied to Some" should "return the value" in {
@@ -94,10 +94,10 @@ class ExerciseTest extends FlatSpec with BeforeAndAfter with GivenWhenThen with 
 
   "bothMatch" should "return an Option of Boolean" in {
 
-    Exercise4.bothMatch_2("a+", "[a-z]+", "a") should be (Some(true))
-    Exercise4.bothMatch_2("a+", "[a-z]+", "b") should be (Some(false))
-    Exercise4.bothMatch_2("a+", "[a-z", "a") should be (None)
-    Exercise4.bothMatch_2("a\\", "[a-z]", "a") should be (None)
+    Exercise4.bothMatch2("a+", "[a-z]+", "a") should be (Some(true))
+    Exercise4.bothMatch2("a+", "[a-z]+", "b") should be (Some(false))
+    Exercise4.bothMatch2("a+", "[a-z", "a") should be (None)
+    Exercise4.bothMatch2("a\\", "[a-z]", "a") should be (None)
   }
 
   "sequence" should "return an Option of List of A" in {

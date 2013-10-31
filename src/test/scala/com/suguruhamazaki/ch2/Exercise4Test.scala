@@ -1,9 +1,9 @@
 package com.suguruhamazaki.ch2
 
 import org.scalatest.{BeforeAndAfter, FlatSpec, GivenWhenThen}
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 
-class Exercise4Test extends FlatSpec with BeforeAndAfter with GivenWhenThen with ShouldMatchers {
+class Exercise4Test extends FlatSpec with BeforeAndAfter with GivenWhenThen with Matchers {
 
   "curry function" should "return a curried function" in {
 
@@ -11,7 +11,7 @@ class Exercise4Test extends FlatSpec with BeforeAndAfter with GivenWhenThen with
     case class B(value: Int)
     case class C(value: Int)
 
-    val sum = (a: A, b: B) => C(a.value + b.value)
+    val sum = (a: A, b: B) ⇒ C(a.value + b.value)
     val func1 = Exercise4.curry(sum)
     val func2 = func1(A(1))
 

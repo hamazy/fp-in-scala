@@ -1,9 +1,9 @@
 package com.suguruhamazaki.ch3
 
 import org.scalatest.{BeforeAndAfter, FlatSpec, GivenWhenThen}
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 
-class ExerciseTest extends FlatSpec with BeforeAndAfter with GivenWhenThen with ShouldMatchers {
+class ExerciseTest extends FlatSpec with BeforeAndAfter with GivenWhenThen with Matchers {
 
   // val list = Cons(1, Cons(2, Cons(3, Nil)))
   val list = List(1, 2, 3)

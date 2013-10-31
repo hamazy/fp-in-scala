@@ -1,9 +1,9 @@
 package com.suguruhamazaki.ch2
 
 import org.scalatest.{BeforeAndAfter, FlatSpec, GivenWhenThen}
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 
-class Exercise1Test extends FlatSpec with BeforeAndAfter with GivenWhenThen with ShouldMatchers {
+class Exercise1Test extends FlatSpec with BeforeAndAfter with GivenWhenThen with Matchers {
 
   "fib function" should "produce a Fibonacci number" in {
 

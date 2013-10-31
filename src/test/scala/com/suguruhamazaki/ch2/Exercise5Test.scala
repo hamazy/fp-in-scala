@@ -1,9 +1,9 @@
 package com.suguruhamazaki.ch2
 
 import org.scalatest.{BeforeAndAfter, FlatSpec, GivenWhenThen}
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 
-class Exercise5Test extends FlatSpec with BeforeAndAfter with GivenWhenThen with ShouldMatchers {
+class Exercise5Test extends FlatSpec with BeforeAndAfter with GivenWhenThen with Matchers {
 
   "uncurry function" should "return a uncurried function" in {
 
@@ -11,7 +11,7 @@ class Exercise5Test extends FlatSpec with BeforeAndAfter with GivenWhenThen with
     case class B(value: Int)
     case class C(value: Int)
 
-    val sum = (a: A) => (b: B) => C(a.value + b.value)
+    val sum = (a: A) ⇒ (b: B) ⇒ C(a.value + b.value)
     val func1 = Exercise5.uncurry(sum)
     val actual = func1(A(1), B(2))
 
