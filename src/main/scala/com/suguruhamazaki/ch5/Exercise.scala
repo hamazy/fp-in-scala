@@ -7,6 +7,14 @@ sealed abstract class Stream[+A] {
     uncons map { c ⇒
       c.head :: c.tail.toList
     } getOrElse(List())
+  def take(n: Int): Stream[A] =
+    if (n <= 0) this
+    else if (n == 1) uncons map { c ⇒
+      Stream.cons(c.head, Empty)
+    } getOrElse(Empty)
+    else uncons map { c ⇒
+      Stream.cons(c.head, c.tail.take(n - 1))
+    } getOrElse(Empty)
 }
 
 object Empty extends Stream[Nothing] {
