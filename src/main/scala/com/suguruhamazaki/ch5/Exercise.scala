@@ -15,6 +15,11 @@ sealed abstract class Stream[+A] {
     else uncons map { c ⇒
       Stream.cons(c.head, c.tail.take(n - 1))
     } getOrElse(Empty)
+  def takeWhile(p: A ⇒ Boolean): Stream[A] =
+    uncons map { c ⇒
+      if (p(c.head)) Stream.cons(c.head, c.tail.takeWhile(p))
+      else Empty
+    } getOrElse(Empty)
 }
 
 object Empty extends Stream[Nothing] {
