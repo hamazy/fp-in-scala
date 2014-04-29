@@ -5,17 +5,17 @@ object BuildSettings {
   val buildSettings = Defaults.defaultSettings ++ Seq(
     organization := "com.suguruhamazaki",
     version := "1.0-SNAPSHOT",
-    scalaVersion := "2.10.2",
-    scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8")
+    scalaVersion := "2.11.0",
+    scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xlint")
   )
 }
 
 object Dependencies {
-  val scalaLogging = "com.typesafe"        %% "scalalogging-slf4j" % "1.0.1"
-  val logback = "ch.qos.logback" % "logback-classic" % "1.0.13"
-  val scalatest = "org.scalatest"       %% "scalatest"          % "2.0.M8" % "test"
+  val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2"
+  val logback = "ch.qos.logback" % "logback-classic" % "1.1.2"
+  val scalatest = "org.scalatest" %% "scalatest" % "2.1.4" % "test"
   val pegdown = "org.pegdown" % "pegdown" % "1.0.1" % "test"
-  val mockito = "org.mockito"         % "mockito-core"        % "1.9.5" % "test"
+  val mockito = "org.mockito" % "mockito-core" % "1.9.5" % "test"
 
   val commonDeps = Seq(
     scalaLogging,
