@@ -102,6 +102,7 @@ class ExerciseTest extends FlatSpec with BeforeAndAfter with GivenWhenThen with 
 
   "sequence" should "return an Option of List of A" in {
 
+    Exercise5.sequence(List()) should be (Some(List()))
     Exercise5.sequence(List(Some(1), Some(2), Some(3))) should be (Some(List(1, 2, 3)))
     Exercise5.sequence(List(None, Some(2), Some(3))) should be (None)
     Exercise5.sequence(List(Some(1), None, Some(3))) should be (None)
@@ -115,6 +116,7 @@ class ExerciseTest extends FlatSpec with BeforeAndAfter with GivenWhenThen with 
   }
   "traverse" should "return an Option of List of B"  in {
 
+    Exercise6.traverse(List())(toInt) should be(Some(List()))
     Exercise6.traverse(List("1", "2", "3"))(toInt) should be (Some(List(1, 2, 3)))
     Exercise6.traverse(List("foo", "2", "3"))(toInt) should be (None)
     Exercise6.traverse(List("1", "foo", "3"))(toInt) should be (None)
@@ -168,11 +170,13 @@ class ExerciseTest extends FlatSpec with BeforeAndAfter with GivenWhenThen with 
     Exercise8.sequence(List(Left("foo"), Right(2), Right(3))) should be (Left("foo"))
     Exercise8.sequence(List(Right(1), Left("foo"), Right(3))) should be (Left("foo"))
     Exercise8.sequence(List(Right(1), Right(2), Left("foo"))) should be (Left("foo"))
+    Exercise8.sequence(List()) should be (Right(List()))
   }
 
   "traverse" should "return an Either" in {
     val f = (s: String) ⇒ toInt(s).map(Right(_)).getOrElse(Left("parse failed"))
 
+    Exercise8.traverse(List())(f) should be (Right(List()))
     Exercise8.traverse(List(Right("1"), Right("2"), Right("3")))(f) should be (Right(List(1, 2, 3)))
     Exercise8.traverse(List(Right("foo"), Right("2"), Right("3")))(f) should be (Left("parse failed"))
     Exercise8.traverse(List(Right("1"), Right("foo"), Right("3")))(f) should be (Left("parse failed"))

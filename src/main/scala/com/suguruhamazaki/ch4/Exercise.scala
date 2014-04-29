@@ -83,6 +83,7 @@ object Exercise4 {
 object Exercise5 {
   def sequence[A](a: List[Option[A]]): Option[List[A]] =
     a match {
+      case Nil ⇒ Some(List())
       case elem :: Nil ⇒ elem.map( _::Nil)
       case head :: rest ⇒ {
         head flatMap { elem ⇒
@@ -97,6 +98,7 @@ object Exercise5 {
 object Exercise6 {
   def traverse[A,B](a: List[A])(f: A ⇒ Option[B]): Option[List[B]] =
     a match {
+      case Nil ⇒ Some(List())
       case x :: Nil ⇒ f(x).map(_::Nil)
       case x :: xs ⇒ f(x).flatMap { elem ⇒
         traverse(xs)(f) map { list ⇒
@@ -132,6 +134,7 @@ object Exercise8 {
   import Exercise7.{Either, Left, Right}
   def sequence[E, A](a: List[Either[E,A]]): Either[E, List[A]] =
     a match {
+      case Nil ⇒ Right(Nil)
       case elem :: Nil ⇒ elem.map { _ :: Nil }
       case head :: rest ⇒ {
         head flatMap { elem ⇒
@@ -143,6 +146,7 @@ object Exercise8 {
     }
   def traverse[E,A,B](a: List[Either[E,A]])(f: A ⇒ Either[E,B]): Either[E, List[B]] =
     a match {
+      case Nil ⇒ Right(Nil)
       case elem :: Nil ⇒ elem flatMap { v ⇒
         f(v).map(List(_))
       }
