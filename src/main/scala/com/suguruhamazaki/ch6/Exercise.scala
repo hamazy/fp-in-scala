@@ -166,7 +166,6 @@ object Exercise {
 
 // ex10
 case class State[S, +A](run: S ⇒ (A, S)) {
-  def unit: State[S, A] = this
   def map[B](f: A ⇒ B): State[S, B] =
     State { s ⇒
       val (a, s2) = run(s)
@@ -183,8 +182,17 @@ case class State[S, +A](run: S ⇒ (A, S)) {
       val (a, s2) = run(s)
       f(a).run(s2)
     }
-  def get: State[S, S] = State(s ⇒ (s, s))
-  def set(s: S): State[S, Unit] =
+}
+
+object State {
+  def unit[S, A](a: A): State[S, A] = State { (a, _) }
+  def modify[S](f: S => S): State[S, Unit] =
+    for {
+      s <- get
+      _ <- set(f(s))
+    } yield ()
+  def get[S]: State[S, S] = State(s ⇒ (s, s))
+  def set[S](s: S): State[S, Unit] =
     State { _ ⇒
       ((), s)
     }
@@ -193,6 +201,23 @@ case class State[S, +A](run: S ⇒ (A, S)) {
 object RandRewritten {
   type Rand[A] = State[RNG, A]
   val int: Rand[Int] = State(_.nextInt)
+  def ints(x: Int): Rand[List[Int]] = State { s ⇒
+    Exercise.ints3(x)(s)
+  }
+  val ns: Rand[List[Int]] =
+    int.flatMap { x ⇒
+      int.flatMap { y ⇒
+        ints(x).map { xs ⇒
+          xs.map(_ % y)
+        }
+      }
+    }
+  val ns2: Rand[List[Int]] =
+    for {
+      x ← int
+      y ← int
+      xs ← ints(x)
+    } yield xs.map(_ % y)
 }
 
 sealed trait Input
