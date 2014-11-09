@@ -44,7 +44,7 @@ object List {
     case Cons(head, tail) ⇒ Cons(head, init(tail)) // not tail-recursive
   }
 
-  def foldRight[A,B](l: List[A], z: B)(f: (A, B) ⇒ B): B =
+  def foldRight[A, B](l: List[A], z: B)(f: (A, B) ⇒ B): B =
     l match {
       case Nil ⇒ z
       case Cons(x, xs) ⇒ f(x, foldRight(xs, z)(f)) // not tail-recursive
@@ -62,7 +62,7 @@ object List {
 
   // Exercise 10
   @annotation.tailrec
-  def foldLeft[A,B](l: List[A], z: B)(f: (B, A) ⇒ B): B =
+  def foldLeft[A, B](l: List[A], z: B)(f: (B, A) ⇒ B): B =
     l match {
       case Nil ⇒ z
       case Cons(x, xs) ⇒ foldLeft(xs, f(z, x))(f)
@@ -78,11 +78,11 @@ object List {
 
   // Exercise 12
   def reverse[A](l: List[A]): List[A] =
-    foldLeft(l, Nil:List[A])((xs,x) ⇒ Cons(x,xs))
+    foldLeft(l, Nil: List[A])((xs, x) ⇒ Cons(x, xs))
 
   // Exercise 14
   def append[A](l: List[A], z: A): List[A] =
-    foldRight(l, Cons(z,Nil))(Cons(_,_))
+    foldRight(l, Cons(z, Nil))(Cons(_, _))
 
   // Exercise 15
   def concat[A](l1: List[A], l2: List[A]): List[A] =
@@ -90,21 +90,21 @@ object List {
 
   // Exercise 16
   def add1(l: List[Int]): List[Int] =
-    foldRight(l, Nil:List[Int])((a, b) ⇒ Cons(a + 1, b))
+    foldRight(l, Nil: List[Int])((a, b) ⇒ Cons(a + 1, b))
 
   // Exercise 17
   def stringify(l: List[Double]): List[String] =
-    foldRight(l, Nil:List[String])((a, b) ⇒ Cons(a.toString, b))
+    foldRight(l, Nil: List[String])((a, b) ⇒ Cons(a.toString, b))
 
   // Exercise 18
-  def map[A,B](l: List[A])(f: A ⇒ B): List[B] =
-    foldRight(l, Nil:List[B])((a, b) ⇒ Cons(f(a), b))
+  def map[A, B](l: List[A])(f: A ⇒ B): List[B] =
+    foldRight(l, Nil: List[B])((a, b) ⇒ Cons(f(a), b))
 
   // Exercise 19
   def filter[A](l: List[A])(f: A ⇒ Boolean): List[A] =
     l match {
       case Nil ⇒ Nil
-      case Cons(x, xs) if f(x) ⇒ Cons(x , filter(xs)(f)) // not tail-recursive
+      case Cons(x, xs) if f(x) ⇒ Cons(x, filter(xs)(f)) // not tail-recursive
       case Cons(x, xs) ⇒ filter(xs)(f) // not tail-recursive
     }
 }

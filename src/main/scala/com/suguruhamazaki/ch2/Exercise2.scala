@@ -6,7 +6,7 @@ object Exercise2 {
     @annotation.tailrec
     def go(as: Array[A]): Boolean =
       as match {
-        case Array(a, b, _*) ⇒ if (gt(a,b)) go(as.tail) else false
+        case Array(a, b, _*) ⇒ if (gt(a, b)) go(as.tail) else false
         case Array(a, b) ⇒ gt(a, b)
         case _ ⇒ true
       }

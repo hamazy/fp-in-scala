@@ -4,7 +4,7 @@ object Exercise1 {
 
   def fib(n: Int): Int = {
     @annotation.tailrec
-    def go(count: Int, previous: (Int,Int)): Int = {
+    def go(count: Int, previous: (Int, Int)): Int = {
       if (count < n) go(count + 1, (previous._1 + previous._2, previous._1))
       else previous._1 + previous._2
     }

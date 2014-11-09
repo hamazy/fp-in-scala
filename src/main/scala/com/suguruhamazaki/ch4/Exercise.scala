@@ -60,14 +60,14 @@ object Exercise2 {
 }
 
 object Exercise3 {
-  def map2[A,B,C](a: Option[A], b: Option[B])(f: (A, B) ⇒ C): Option[C] = for {
+  def map2[A, B, C](a: Option[A], b: Option[B])(f: (A, B) ⇒ C): Option[C] = for {
     x ← a
     y ← b
   } yield f(x, y)
 }
 
 object Exercise4 {
-  import java.util.regex.{Pattern, PatternSyntaxException}
+  import java.util.regex.{ Pattern, PatternSyntaxException }
   def pattern(s: String): Option[Pattern] =
     try {
       Some(Pattern.compile(s))
@@ -75,7 +75,7 @@ object Exercise4 {
       case e: PatternSyntaxException ⇒ None
     }
   def mkMatcher(pat: String): Option[String ⇒ Boolean] =
-    pattern(pat) map ( p ⇒ (s: String) ⇒ p.matcher(s).matches)
+    pattern(pat) map (p ⇒ (s: String) ⇒ p.matcher(s).matches)
   def bothMatch2(pat1: String, pat2: String, s: String): Option[Boolean] =
     Exercise3.map2(mkMatcher(pat1), mkMatcher(pat2)) { (f, g) ⇒ f(s) && g(s) }
 }
@@ -84,11 +84,11 @@ object Exercise5 {
   def sequence[A](a: List[Option[A]]): Option[List[A]] =
     a match {
       case Nil ⇒ Some(List())
-      case elem :: Nil ⇒ elem.map( _::Nil)
+      case elem :: Nil ⇒ elem.map(_ :: Nil)
       case head :: rest ⇒ {
         head flatMap { elem ⇒
           sequence(rest) map { list ⇒
-            elem::list
+            elem :: list
           }
         }
       }
@@ -96,13 +96,13 @@ object Exercise5 {
 }
 
 object Exercise6 {
-  def traverse[A,B](a: List[A])(f: A ⇒ Option[B]): Option[List[B]] =
+  def traverse[A, B](a: List[A])(f: A ⇒ Option[B]): Option[List[B]] =
     a match {
       case Nil ⇒ Some(List())
-      case x :: Nil ⇒ f(x).map(_::Nil)
+      case x :: Nil ⇒ f(x).map(_ :: Nil)
       case x :: xs ⇒ f(x).flatMap { elem ⇒
         traverse(xs)(f) map { list ⇒
-          elem::list
+          elem :: list
         }
       }
     }
@@ -131,20 +131,20 @@ object Exercise7 {
 }
 
 object Exercise8 {
-  import Exercise7.{Either, Left, Right}
-  def sequence[E, A](a: List[Either[E,A]]): Either[E, List[A]] =
+  import Exercise7.{ Either, Left, Right }
+  def sequence[E, A](a: List[Either[E, A]]): Either[E, List[A]] =
     a match {
       case Nil ⇒ Right(Nil)
       case elem :: Nil ⇒ elem.map { _ :: Nil }
       case head :: rest ⇒ {
         head flatMap { elem ⇒
           sequence(rest) map { list ⇒
-            elem::list
+            elem :: list
           }
         }
       }
     }
-  def traverse[E,A,B](a: List[Either[E,A]])(f: A ⇒ Either[E,B]): Either[E, List[B]] =
+  def traverse[E, A, B](a: List[Either[E, A]])(f: A ⇒ Either[E, B]): Either[E, List[B]] =
     a match {
       case Nil ⇒ Right(Nil)
       case elem :: Nil ⇒ elem flatMap { v ⇒
@@ -153,8 +153,8 @@ object Exercise8 {
       case head :: rest ⇒
         head flatMap { elem ⇒
           traverse(rest)(f) flatMap { list ⇒
-            f(elem) map { _::list }
+            f(elem) map { _ :: list }
           }
-      }
+        }
     }
 }
