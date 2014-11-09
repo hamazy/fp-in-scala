@@ -30,7 +30,7 @@ object FpInScalaBuild extends Build {
 
   import BuildSettings.buildSettings
   import Dependencies.commonDeps
-  import org.scalastyle.sbt.ScalastylePlugin.{Settings ⇒ ScalastyleSettings}
+  import org.scalastyle.sbt.ScalastylePlugin.{projectSettings ⇒ ScalastyleSettings}
   import ScctPlugin.instrumentSettings
 
   lazy val root = Project("fp-in-scala",
