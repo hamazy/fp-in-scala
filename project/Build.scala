@@ -32,10 +32,11 @@ object FpInScalaBuild extends Build {
   import Dependencies.commonDeps
   import org.scalastyle.sbt.ScalastylePlugin.{projectSettings ⇒ ScalastyleSettings}
   import ScctPlugin.instrumentSettings
+  import com.typesafe.sbt.SbtScalariform.scalariformSettings
 
   lazy val root = Project("fp-in-scala",
 			  file("."),
-                          settings = buildSettings ++ instrumentSettings ++ ScalastyleSettings) settings (
+                          settings = buildSettings ++ instrumentSettings ++ ScalastyleSettings ++ scalariformSettings) settings (
                     libraryDependencies ++= commonDeps,
                     testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/report", "-o"))
 }
