@@ -1,6 +1,8 @@
 package com.suguruhamazaki.ch12
 
 import scala.language.higherKinds
+import scala.language.implicitConversions
+import com.suguruhamazaki.ch6.State
 import com.suguruhamazaki.ch11.Functor
 
 trait Applicative[F[_]] extends Functor[F] {
@@ -119,6 +121,12 @@ object Monad {
     def unit[A](a: ⇒ A): A = a
     override def flatMap[A, B](fa: A)(f: A ⇒ B): B = f(fa)
   }
+
+  def stateMonad[S] = new Monad[({ type f[x] = State[S, x] })#f] {
+    def unit[A](a: ⇒ A): State[S, A] = State(s ⇒ (a, s))
+    override def flatMap[A, B](sa: State[S, A])(f: A ⇒ State[S, B]): State[S, B] =
+      sa.flatMap(f)
+  }
 }
 
 import com.suguruhamazaki.ch10.Foldable
@@ -132,6 +140,18 @@ trait Traverse[F[_]] extends Functor[F] with Foldable[F] {
   // in terms of traverse
   def map[A, B](fa: F[A])(f: A ⇒ B): F[B] =
     traverse[Monad.Id, A, B](fa)(f)(Monad.idMonad)
+
+  def traverseS[S, A, B](fa: F[A])(f: A ⇒ State[S, B]): State[S, F[B]] =
+    traverse[({ type f[x] = State[S, x] })#f, A, B](fa)(f)(Monad.stateMonad)
+
+  import State.{ get, set }
+  def zipWithIndex[A](ta: F[A]): F[(A, Int)] =
+    traverseS(ta) { (a: A) ⇒
+      (for {
+        i ← get[Int]
+        _ ← set(i + 1)
+      } yield (a, i))
+    }.run(0)._1
 }
 
 object Traverse {

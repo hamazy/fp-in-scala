@@ -106,6 +106,7 @@ object Monad {
       a.flatMap(f)
   }
 
+  import com.suguruhamazaki.ch6.State
   type IntState[A] = State[Int, A]
 
   val intStateMonad = new Monad[IntState] {
@@ -128,24 +129,4 @@ case class Id[A](value: A) {
 
   // ex17
   def flatMap[B](f: A ⇒ Id[B]): Id[B] = f(value)
-}
-
-case class State[S, A](run: S ⇒ (A, S)) {
-  def map[B](f: A ⇒ B): State[S, B] =
-    State(s ⇒ {
-      val (a, s1) = run(s)
-      val b = f(a)
-      (b, s1)
-    })
-  def flatMap[B](f: A ⇒ State[S, B]): State[S, B] =
-    State(s ⇒ {
-      val (a, s1) = run(s)
-      val b = f(a)
-      b.run(s1)
-    })
-  def getState: State[S, S] =
-    State(s ⇒ (s, s))
-
-  def setState(s: ⇒ S): State[S, Unit] =
-    State(s ⇒ ((), s))
 }
