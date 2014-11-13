@@ -152,6 +152,29 @@ trait Traverse[F[_]] extends Functor[F] with Foldable[F] {
         _ ← set(i + 1)
       } yield (a, i))
     }.run(0)._1
+
+  def toList[A](fa: F[A]): List[A] =
+    traverseS(fa) { (a: A) ⇒
+      (for {
+        as ← get[List[A]]
+        _ ← set(a :: as)
+      } yield ())
+    }.run(Nil)._2.reverse
+
+  def mapAccum[S, A, B](fa: F[A], s: S)(f: (A, S) ⇒ (B, S)): (F[B], S) =
+    traverseS(fa) { (a: A) ⇒
+      (for {
+        s1 ← get[S]
+        (b, s2) = f(a, s1)
+        _ ← set(s2)
+      } yield b)
+    }.run(s)
+
+  // ex16
+  def reverse[A](fa: F[A]): F[A] = ???
+
+  // ex17 in terms of mapAccum
+  override def foldLeft[A, B](as: F[A])(z: B)(f: (B, A) => B): B = ???
 }
 
 object Traverse {
