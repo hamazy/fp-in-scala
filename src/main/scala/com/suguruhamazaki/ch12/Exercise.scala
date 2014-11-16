@@ -127,6 +127,13 @@ object Monad {
     override def flatMap[A, B](sa: State[S, A])(f: A ⇒ State[S, B]): State[S, B] =
       sa.flatMap(f)
   }
+
+  // ex20
+  def composeM[F[_], G[_]](F: Monad[F], G: Monad[G], T: Traverse[G]) =
+    new Monad[({ type f[x] = F[G[x]] })#f] {
+      def unit[A](a: => A): F[G[A]] = F.unit(G.unit(a))
+      override def join[A](ffa: F[G[F[G[A]]]]): F[G[A]] = ???
+    }
 }
 
 import com.suguruhamazaki.ch10.Foldable
