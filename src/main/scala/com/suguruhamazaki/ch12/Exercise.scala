@@ -131,6 +131,7 @@ object Monad {
 
 import com.suguruhamazaki.ch10.Foldable
 trait Traverse[F[_]] extends Functor[F] with Foldable[F] {
+  self =>
   def traverse[G[_], A, B](fa: F[A])(f: A ⇒ G[B])(implicit G: Applicative[G]): G[F[B]] =
     sequence(map(fa)(f))
   def sequence[G[_], A](fga: F[G[A]])(implicit G: Applicative[G]): G[F[A]] =
@@ -177,6 +178,17 @@ trait Traverse[F[_]] extends Functor[F] with Foldable[F] {
   // ex17 in terms of mapAccum
   override def foldLeft[A, B](as: F[A])(z: B)(f: (B, A) => B): B =
     mapAccum(as, z) { (a: A, z: B) => ((), f(z, a)) }._2
+
+  // ex18
+  def fuse[G[_], H[_], A, B](fa: F[A])(f: A => G[B], g: A => H[B])(G: Applicative[G], H: Applicative[H]): (G[F[B]], H[F[B]]) =
+    traverse[({ type f[x] = (G[x], H[x]) })#f, A, B](fa) { a: A => (f(a), g(a)) }(G.product(H))
+
+  // ex19
+  def compose[G[_]](implicit G: Traverse[G]): Traverse[({ type f[x] = F[G[x]] })#f] =
+    new Traverse[({ type f[x] = F[G[x]] })#f] {
+      override def traverse[H[_], A, B](fa: F[G[A]])(f: A => H[B])(implicit H: Applicative[H]): H[F[G[B]]] =
+        self.traverse(fa) { ga: G[A] => G.traverse(ga)(f) }
+    }
 }
 
 object Traverse {
