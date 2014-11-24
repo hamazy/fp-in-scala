@@ -83,4 +83,21 @@ object Free {
         case FlatMap(y, g) => runTranpoline(y.flatMap(z => g(z).flatMap(f)))
       }
     }
+
+  // ex3
+  def run[F[_], A](a: Free[F, A])(implicit F: Monad[F]): F[A] = step(a) match {
+    case Return(a) => F.unit(a)
+    case Suspend(fa) => fa
+    case FlatMap(x, f) => x match {
+      case Suspend(fa) => F.flatMap(fa) { a => run(f(a)) }
+      case _ => sys.error("")
+    }
+
+  }
+  @annotation.tailrec
+  def step[F[_], A](a: Free[F, A]): Free[F, A] = a match {
+    case FlatMap(FlatMap(x, f), g) => step(x.flatMap(a => f(a).flatMap(g)))
+    case FlatMap(Return(x), f) => step(f(x))
+    case _ => a
+  }
 }
