@@ -48,6 +48,29 @@ package stackfree {
   case class Suspend[A](resume: () => A) extends IO[A]
   case class FlatMap[A, B](sub: IO[A], k: A => IO[B]) extends IO[B]
 
+  object IO {
+    @annotation.tailrec
+    def run[A](io: IO[A]): A = io match {
+      case Return(a) => a
+      case Suspend(r) => r()
+      case FlatMap(x, f) => x match {
+        case Return(a) => run(f(a))
+        case Suspend(r) => run(f(r()))
+        case FlatMap(y, g) => run(y.flatMap { a => g(a).flatMap(f) })
+      }
+    }
+
+    def printLine(s: String): IO[Unit] =
+      Suspend(() => Return(println(s)))
+
+    def forever[A, B](a: IO[A]): IO[B] = {
+      lazy val t: IO[B] = forever(a)
+      a.flatMap(_ => t)
+    }
+
+    val p = IO.forever(printLine("Still going..."))
+  }
+
 }
 
 sealed trait Free[F[_], A] {
